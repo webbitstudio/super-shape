@@ -29,7 +29,7 @@ function loop() {
         nb = Math.random() * 8;
         for (j = 1; j <= nb; j+=2) {
             vector1 = getVector(r, phi + (frame / 50 % TWO_PI), length * j);
-            ctx.fillRect(vector1.x + canvas.centerX, vector1.y + canvas.centerY, 2, 2);
+            ctx.fillRect(vector1.x + canvas.centerX, vector1.y + canvas.centerY, 1, 1);
         }
     }
 
