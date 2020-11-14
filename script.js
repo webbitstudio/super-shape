@@ -1,11 +1,13 @@
+import {shapes} from './shape.js'
+
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const TWO_PI = 2 * Math.PI;
 let length = 0;
 let shrink = false;
-let pts = 10000;
+let pts = 2000;
 let frame = 0;
-let a, b, m, n1, n2, n3, phi, r, i, j, vector1, nb, p1, p2, p3 = null;
+let a, b, m, n1, n2, n3, phi, r, i, j, vector1, nb, p1, p2, p3, rev = null;
 
 function setup() {
     canvas.width = window.innerWidth;
@@ -20,18 +22,18 @@ function loop() {
     ctx.clearRect(0,0,canvas.width, canvas.height);
     frame++;
     
-    for(i = 0; i < pts; i++) {
+    for(i = frame%3; i < pts; i+=3) {
         ctx.fillStyle = `hsl(${frame % 360}, 50%, 50%)`;
-        phi = i * TWO_PI / pts
+        phi = i * rev / pts
         r = supershape(phi);
-        nb = Math.random() * 3;
-        for (j = 0; j < nb; j++) {
-            vector1 = getVector(r, phi + (frame / 50 % TWO_PI), length * (j+1) * (10 / nb));
-            ctx.fillRect(vector1.x + canvas.centerX, vector1.y + canvas.centerY, 1, 1);
+        nb = Math.random() * 8;
+        for (j = 1; j <= nb; j+=2) {
+            vector1 = getVector(r, phi + (frame / 50 % TWO_PI), length * j);
+            ctx.fillRect(vector1.x + canvas.centerX, vector1.y + canvas.centerY, 2, 2);
         }
     }
 
-    if (length < 0 || length > 30) {
+    if (length < 0 || length > 100) {
         shrink = !shrink;
         if (length < 0) {
             length = 0;
@@ -48,12 +50,14 @@ function loop() {
 
 
 function changeShape() {
-    n1 = Math.random() * 60;
-    n2 = Math.random() * 60;
-    n3 = Math.random() * 60;
-    a = Math.random() * 1.5;
-    b = a
-    m = Math.random() * 5 + 5;
+    let index = Math.round(Math.random() * (shapes.length-1));
+    n1 = shapes[index].n1;
+    n2 = shapes[index].n2;
+    n3 = shapes[index].n3;
+    a = 1;
+    b = 1;
+    m = shapes[index].baseM * Math.random() * 8;
+    rev = shapes[index].rev;
 }
 
 function supershape(theta) {
